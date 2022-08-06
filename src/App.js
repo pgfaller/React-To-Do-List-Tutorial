@@ -1,55 +1,35 @@
-import React, { Component } from 'react';
-import TaskComponent from './TaskComponent';
-import SubmitComponent from './SubmitComponent';
+import React, { useState } from 'react';
+function App() {
 
-class App extends Component {
-   
-   constructor(props){
-    super(props);
-    this.state = {
-      text: '',
-      tasks:['walk the dog', 'finish homework'],
-      
-    };
+  // Create new task
+  const [newTask, setNewTask] = useState("")
+  // Add to the task array
+  const [tasks, setTasks] = useState([])
 
-    this.handleChange = this.handleChange.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
-    this.handleDelete = this.handleDelete.bind(this)
-   };
-
-   //track changes in the text bar
-
-   handleChange(event) {
-    this.setState({text: event.target.value});
-   }
-   
-   handleSubmit (){
-    this.setState({tasks:[...this.state.tasks, this.state.text]});
-    this.setState({text: ''});
-   };
-
-   handleDelete (id){
-     //make a shallow copy of state
-     let copy = [...this.state.tasks];
-     copy.splice(id, 1);
-     this.setState({tasks:copy});   
-   };
-   
-   render () {
-   
-    return (
-      <div>
-      <SubmitComponent
-      handleChange = {this.handleChange}
-      handleSubmit = {this.handleSubmit}
-      text = {this.state.text}/>
-      
-      {this.state.tasks.map((currTask, index) =>{
-        return <TaskComponent task = {currTask} id = {index} handleDelete = {this.handleDelete}/>
+  return (
+    <div>
+      {tasks.map((toDo, id) => {
+        return (
+          <div>
+            <span> {toDo} </span><button id={id} onClick={() => deleteTasks(id)}>Delete</button>
+          </div>
+        )
       })}
+      <input type="text" value ={newTask} onChange={event => setNewTask(event.target.value)}/>
+      <button onClick={addTasks}>Add</button>
+      <h1>{newTask}</h1>
+    </div>
+  )
 
-      </div>
-    )
+  function addTasks() {
+    setTasks(prevArray => [...prevArray, newTask])
+    setNewTask('')
+  }
+
+  function deleteTasks(id) {
+    const tasksCopy = [...tasks]
+    tasksCopy.splice(id, 1)
+    setTasks(tasksCopy)
   }
 };
 
